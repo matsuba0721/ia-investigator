@@ -4,79 +4,117 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>きゃらし！</title>
+        <title>IA.Investigator</title>
 
+        <link rel="shortcut icon" href="./favicon.ico" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
-        <link rel="stylesheet" type="text/css" href="css/sheet.css" />
+        <link rel="stylesheet" type="text/css" href="css/Semantic-UI-Alert.css" />
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script src="https://kit.fontawesome.com/52ec844145.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+        <script src="js/Semantic-UI-Alert.js"></script>
+        <script src="js/main.js"></script>
         <script src="js/sheet.js"></script>
     </head>
-
     <body>
-        <div class="ui fixed inverted menu"></div>
+        <header class="ui fixed inverted menu">
+            <div class="ui container">
+                <a href="index.html" class="header item"> IA.Investigator </a>
+                <div class="ui inverted right menu">
+                    <a class="item" href="mypage.html">
+                        <i class="user icon"></i>
+                        <p id="account-name">User Name</p>
+                    </a>
+                    <a id="account-sign-in" class="item">
+                        <i class="green sign-in icon"></i>
+                    </a>
+                    <a id="account-sign-out" class="item" style="display: none">
+                        <i class="red sign-out negative icon"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <div class="ui grid container" style="margin-top: 1em">
+            <div id="account-recommendation" class="sixteen wide column" style="display: none">
+                <div class="ui inverted blue message">
+                    <i id="account-recommendation-close" class="close icon"></i>
+                    <div class="header">ゲストアカウントでログインしています。</div>
+                    <p>キャラクターを保存及び管理するためには<b>アカウントを作成</b>してください。</p>
+                </div>
+            </div>
+        </div>
         <div class="ui main two column stackable grid container" style="margin-top: 0">
             <div class="column">
                 <div class="ui top inverted attached segment">
                     <p style="font-size: x-large">基本情報</p>
                 </div>
                 <div class="ui inverted center aligned attached segment">
-                    <img class="ui centered bordered image" src="./images/wireframe/image.png" style="width: 230px; padding: 0.5em; padding: 0.5em" />
-                    <button class="ui button">
-                        <i class="upload icon"></i>
-                        画像を変更
-                    </button>
+                    <img id="profile-image" class="ui centered bordered image" style="width: auto; height: 222px; padding: 0.5em; padding: 0.5em" />
+                    <div class="ui middle aligned center aligned grid container">
+                        <div class="ui fluid inverted segment" style="padding: 0.5em">
+                            <input id="upload-profile-image" type="file" (change)="fileEvent($event)" class="inputfile" />
+                            <label for="upload-profile-image" class="ui right floated button" style="padding: 0.5em 1.5em 0.5em">
+                                <i class="ui upload icon"></i>
+                                画像を変更
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="ui inverted attached segment">
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">名前</div>
-                        <input type="text" />
+                        <input id="profile-name" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">カナ</div>
-                        <input type="text" />
+                        <input id="profile-kana" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">タグ</div>
-                        <input type="text" />
+                        <input id="profile-tag" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">職業</div>
-                        <input type="text" />
+                        <input id="profile-job" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">年齢</div>
-                        <input class="no-spin" type="number" />
+                        <input id="profile-age" type="text" style="padding-left: 0.5em" />
                         <div class="ui basic label">性別</div>
-                        <input type="text" />
+                        <input id="profile-gender" type="text" style="padding-left: 0.5em; border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-color: transparent" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">身長</div>
-                        <input class="no-spin" type="number" />
+                        <input id="profile-height" type="text" style="padding-left: 0.5em" />
                         <div class="ui basic label">体重</div>
-                        <input class="no-spin" type="number" />
+                        <input id="profile-weight" type="text" style="padding-left: 0.5em; border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-color: transparent" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">出身</div>
-                        <input type="text" />
+                        <input id="profile-origin" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">髪の色</div>
-                        <input type="text" />
+                        <input id="profile-hairColor" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">瞳の色</div>
-                        <input type="text" />
+                        <input id="profile-eyeColor" type="text" style="padding-left: 0.5em" />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">肌の色</div>
-                        <input type="text" />
+                        <input id="profile-skinColor" type="text" style="padding-left: 0.5em" />
                     </div>
                 </div>
             </div>
             <div class="column">
                 <div class="ui top inverted attached segment">
-                    <div id="randam-generate-status" class="ui right floated primary button">ランダム</div>
+                    <div id="randam-generate-parameter" class="ui right floated primary button">
+                        <i class="random icon"></i>
+                        ランダム
+                    </div>
                     <p style="font-size: x-large">能力値</p>
                 </div>
                 <div class="ui inverted attached segment">
@@ -329,34 +367,178 @@
                 </div>
                 <div class="ui inverted attached segment">
                     <div class="ui fluid right labeled input container">
-                        <label for="param-san" class="ui basic label">SAN</label>
-                        <input id="param-san" type="number no-spin" />
-                        <div class="ui basic label">/99</div>
+                        <div for="param-san" class="ui basic label">SAN</div>
+                        <input id="param-san" class="no-spin" type="number" />
+                        <label id="param-san-limit" class="ui basic label">/99</label>
                         <label id="param-san-indefinite" class="ui basic red label">0</label>
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">BLD</div>
-                        <input id="param-bld" type="number no-spin" disabled />
+                        <input id="param-bld" type="number" disabled />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">DB</div>
-                        <input id="param-db" type="number no-spin" disabled />
+                        <input id="param-db" type="text" style="text-align: right; padding-right: 16px" disabled />
                     </div>
                     <div class="ui fluid labeled input container">
                         <div class="ui basic label">MOV</div>
-                        <input id="param-mov" type="number no-spin" disabled />
+                        <input id="param-mov" type="number" disabled />
                     </div>
                 </div>
             </div>
         </div>
-        <div class="ui mobile reversed two column stackable grid container">
+        <div class="ui mobile reversed two column stackable grid container" style="padding-bottom: 5em">
             <div class="column">
                 <div class="ui top inverted attached segment">
                     <p style="font-size: x-large">武器</p>
                 </div>
-
-                <div class="ui inverted segment">Content1</div>
-                <div class="ui inverted segment">Content1</div>
+                <div class="ui inverted attached segment">
+                    <table class="ui inverted striped unstackable selectable table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="width: 30%"></th>
+                                <th style="min-width: 3em; max-width: 5em">成功率</th>
+                                <th colspan="4" style="min-width: 4.2em; max-width: 5em">技能</th>
+                                <th rowspan="2" style="width: 0.2em"></th>
+                            </tr>
+                            <tr>
+                                <th>ダメージ</th>
+                                <th>射程</th>
+                                <th>回数</th>
+                                <th>装弾数</th>
+                                <th>故障</th>
+                            </tr>
+                        </thead>
+                        <tbody id="weapon-table"></tbody>
+                    </table>
+                    <button id="append-weapon" class="ui fluid inverted secondary basic button">武器追加</button>
+                </div>
+                <div class="ui top inverted attached segment" style="margin-top: 28px">
+                    <p style="font-size: x-large">装備と所持品</p>
+                </div>
+                <div class="ui inverted attached segment">
+                    <table class="ui inverted striped unstackable selectable table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%"></th>
+                                <th style="min-width: 4.2em; max-width: 5em">単価</th>
+                                <th style="min-width: 2.6em; max-width: 3.2em">個数</th>
+                                <th style="min-width: 4.2em; max-width: 5em">価格</th>
+                                <th style="width: 40%">備考</th>
+                                <th style="width: 0.2em"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="equip-table"></tbody>
+                    </table>
+                    <button id="append-equip" class="ui fluid inverted secondary basic button">所持品追加</button>
+                </div>
+                <div class="ui top inverted attached segment" style="margin-top: 28px">
+                    <p style="font-size: x-large">収入と財産</p>
+                </div>
+                <div class="ui inverted attached segment">
+                    <div class="ui fluid labeled input container">
+                        <div class="ui basic label">支出レベル</div>
+                        <input id="money-pocket" type="text" />
+                    </div>
+                    <div class="ui fluid labeled input container">
+                        <div class="ui basic label">現金</div>
+                        <input id="money-cash" type="text" />
+                    </div>
+                    <div class="ui fluid labeled input container">
+                        <div class="ui basic label">資産</div>
+                        <input id="money-assets" type="text" />
+                    </div>
+                </div>
+                <div class="ui top inverted attached segment" style="margin-top: 28px">
+                    <div id="randam-generate-backstory" class="ui right floated primary button"><i class="random icon"></i>ランダム</div>
+                    <p style="font-size: x-large">バックストーリー</p>
+                </div>
+                <div class="ui inverted attached segment">
+                    <div class="ui inverted accordion">
+                        <div class="inline active title">
+                            <i class="dropdown icon"></i>
+                            容姿の描写
+                        </div>
+                        <div class="active content grid">
+                            <textarea id="backstory-personalDescription" class="ui textarea" rows="3"></textarea>
+                            <div id="randam-generate-backstory-personalDescription" class="ui fluid inverted blue basic button"><i class="random icon"></i>ランダム</div>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            イデオロギー／信念
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-ideologyOrBeliefs" class="ui textarea" rows="3"></textarea>
+                            <div id="randam-generate-backstory-ideologyOrBeliefs" class="ui fluid inverted blue basic button"><i class="random icon"></i>ランダム</div>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            重要な人々
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-significantPeople" class="ui textarea" rows="3"></textarea>
+                            <div id="randam-generate-backstory-significantPeople" class="ui fluid inverted blue basic button"><i class="random icon"></i>ランダム</div>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            意味のある場所
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-meaningfulLocations" class="ui textarea" rows="3"></textarea>
+                            <div id="randam-generate-backstory-meaningfulLocations" class="ui fluid inverted blue basic button"><i class="random icon"></i>ランダム</div>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            秘蔵の品
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-treasuredPossessions" class="ui textarea" rows="3"></textarea>
+                            <div id="randam-generate-backstory-treasuredPossessions" class="ui fluid inverted blue basic button"><i class="random icon"></i>ランダム</div>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            特徴
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-traits" class="ui textarea" rows="3"></textarea>
+                            <div id="randam-generate-backstory-traits" class="ui fluid inverted blue basic button"><i class="random icon"></i>ランダム</div>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            負傷、傷跡
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-injuriesAndScars" class="ui textarea" rows="3"></textarea>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            恐怖症、マニア
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-phobiasAndManias" class="ui textarea" rows="3"></textarea>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            魔導書、呪文、アーティファクト
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-spellsAndArtifacts" class="ui textarea" rows="3"></textarea>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            遭遇した超自然の存在
+                        </div>
+                        <div class="active content">
+                            <textarea id="backstory-encounters" class="ui textarea" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui top inverted attached segment" style="margin-top: 28px">
+                    <p style="font-size: x-large">メモ</p>
+                </div>
+                <div class="ui inverted attached segment">
+                    <textarea id="memo" class="ui textarea" rows="10"></textarea>
+                </div>
             </div>
             <div class="column">
                 <div class="ui top inverted attached segment">
@@ -365,7 +547,7 @@
                 <div class="ui inverted attached segment">
                     <div class="ui fluid labeled input">
                         <div class="ui basic label">職業ポイント</div>
-                        <div class="ui fluid selection dropdown">
+                        <div class="ui fluid selection dropdown" style="z-index: 100">
                             <input id="param-job-points-calculation" type="hidden" value="EDU×4" />
                             <i class="dropdown icon"></i>
                             <div class="default text"></div>
@@ -378,6 +560,9 @@
                                 <div class="item">EDU×2+SIZ×2</div>
                                 <div class="item">EDU×2+APP×2</div>
                             </div>
+                        </div>
+                        <div id="param-job-points-calculate" class="ui fluid primary button" style="width: 3.3em">
+                            <i class="calculator icon" style="width: 6px"></i>
                         </div>
                     </div>
                     <table class="ui inverted striped selectable unstackable table">
@@ -394,7 +579,7 @@
                                 <td><strong>職業</strong></td>
                                 <td>
                                     <div class="ui fluid input">
-                                        <input id="param-job-points" class="no-spin" type="number" disabled />
+                                        <input id="param-job-points" class="no-spin" type="number" />
                                     </div>
                                 </td>
                                 <td>
@@ -430,1600 +615,330 @@
                     </table>
                 </div>
                 <div class="ui inverted attached segment">
+                    <div class="ui right aligned segment" style="margin: -4px 0px 0px 0px; padding: 0.3em; background-color: transparent; position: sticky; top: 50px; z-index: 10">
+                        <label id="param-job-points-usage" class="ui large blue basic label">職業P 0/0</label>
+                        <label id="param-interest-points-usage" class="ui large blue basic label">興味P 0/0</label>
+                    </div>
                     <div class="ui inverted accordion">
                         <div class="active title">
                             <i class="dropdown icon"></i>
-                            戦闘技能
+                            戦闘系技能
                         </div>
                         <div class="active content">
-                            <table class="ui inverted striped selectable unstackable table" cellpadding="10px">
+                            <table class="ui inverted striped selectable unstackable table">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th style="width: 2.5em">初</th>
-                                        <th style="width: 2.5em">職</th>
-                                        <th style="width: 2.5em">興</th>
-                                        <th style="width: 2.5em">成</th>
-                                        <th style="width: 2.5em">他</th>
-                                        <th style="width: 3em">計</th>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
                                         <th style="width: 0.2em"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101-name" class="no-spin" type="text" value="回避" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101" class="no-spin" type="number" value="0" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-101-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-name" class="no-spin" type="text" value="近接戦闘(格闘)" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201" class="no-spin" type="number" value="25" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-name" class="no-spin" type="text" value="近接戦闘(斧)" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201" class="no-spin" type="number" value="15" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-name" class="no-spin" type="text" value="近接戦闘(刀剣)" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-name" class="no-spin" type="text" value="投擲" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-name" class="no-spin" type="text" value="射撃(拳銃)" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-name" class="no-spin" type="text" value="射撃(L/SG)" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301" class="no-spin" type="number" value="25" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-name" class="no-spin" type="text" value="砲術" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="skill-combat-table"></tbody>
                             </table>
+                            <div class="ui two buttons">
+                                <button id="append-skill-combat-malee" value="近接戦闘" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈近接戦闘〉追加</button>
+                                <button id="append-skill-combat-firearms" value="射撃" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈射撃〉追加</button>
+                            </div>
+                            <button id="append-skill-combat" class="ui fluid inverted secondary basic button">戦闘技能追加</button>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            探索系技能
+                        </div>
+                        <div class="active content">
+                            <table class="ui inverted striped selectable unstackable table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
+                                        <th style="width: 0.2em"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skill-survey-table"></tbody>
+                            </table>
+                            <button id="append-skill-survey" class="ui fluid inverted secondary basic button">探索技能追加</button>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            対人系技能
+                        </div>
+                        <div class="active content">
+                            <table class="ui inverted striped selectable unstackable table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
+                                        <th style="width: 0.2em"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skill-personal-table"></tbody>
+                            </table>
+                            <button id="append-skill-personal" class="ui fluid inverted secondary basic button">対人技能追加</button>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            行動系技能
+                        </div>
+                        <div class="active content">
+                            <table class="ui inverted striped selectable unstackable table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
+                                        <th style="width: 0.2em"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skill-conduct-table"></tbody>
+                            </table>
+                            <div class="ui two buttons">
+                                <button id="append-skill-conduct-arts" value="製作/芸術" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈製作/芸術〉追加</button>
+                                <button id="append-skill-conduct-survival" value="サバイバル" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈サバイバル〉追加</button>
+                            </div>
+                            <button id="append-skill-conduct" class="ui fluid inverted secondary basic button">行動技能追加</button>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            移動系技能
+                        </div>
+                        <div class="active content">
+                            <table class="ui inverted striped selectable unstackable table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
+                                        <th style="width: 0.2em"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skill-transfer-table"></tbody>
+                            </table>
+                            <div class="ui two buttons">
+                                <button id="append-skill-transfer-drive" value="運転" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈運転〉追加</button>
+                                <button id="append-skill-transfer-control" value="操縦" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈操縦〉追加</button>
+                            </div>
+                            <button id="append-skill-transfer" class="ui fluid inverted secondary basic button">移動技能追加</button>
+                        </div>
+                        <div class="active title">
+                            <i class="dropdown icon"></i>
+                            知識系技能
+                        </div>
+                        <div class="active content">
+                            <table class="ui inverted striped selectable unstackable table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
+                                        <th style="width: 0.2em"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skill-knowledge-table"></tbody>
+                            </table>
+                            <div class="ui two buttons">
+                                <button id="append-skill-knowledge-folklore" value="伝承" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈伝承〉追加</button>
+                                <button id="append-skill-knowledge-science" value="科学" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈科学〉追加</button>
+                            </div>
+                            <div class="ui two buttons">
+                                <button id="append-skill-knowledge-native" value="母国語" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈母国語〉追加</button>
+                                <button id="append-skill-knowledge-language" value="言語" class="ui fluid inverted secondary basic button" style="margin-top: 0.2em">〈言語〉追加</button>
+                            </div>
+                            <button id="append-skill-knowledge" class="ui fluid inverted secondary basic button">知識技能追加</button>
                         </div>
                         <div class="title">
                             <i class="dropdown icon"></i>
-                            探索技能
+                            まれな技能
                         </div>
                         <div class="content">
-                            <table class="ui inverted striped selectable unstackable table" cellpadding="10px">
+                            <table class="ui inverted striped selectable unstackable table">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th style="width: 2.5em">初</th>
-                                        <th style="width: 2.5em">職</th>
-                                        <th style="width: 2.5em">興</th>
-                                        <th style="width: 2.5em">成</th>
-                                        <th style="width: 2.5em">他</th>
-                                        <th style="width: 3em">計</th>
+                                        <th style="width: 30%"></th>
+                                        <th style="width: 20%"></th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">初</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">職</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">興</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">成</th>
+                                        <th style="min-width: 1.9em; max-width: 2.5em">他</th>
+                                        <th style="min-width: 2.6em; max-width: 5em">計</th>
                                         <th style="width: 0.2em"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401-name" class="no-spin" type="text" value="目星" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401" class="no-spin" type="number" value="25" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-401-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501-name" class="no-spin" type="text" value="聞き耳" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-501-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601-name" class="no-spin" type="text" value="応急手当" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601" class="no-spin" type="number" value="30" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-601-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701-name" class="no-spin" type="text" value="図書館" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-701-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801-name" class="no-spin" type="text" value="隠密" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-801-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901-name" class="no-spin" type="text" value="精神分析" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-901-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001-name" class="no-spin" type="text" value="鍵開け" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1001-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101-name" class="no-spin" type="text" value="手さばき" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1101-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201-name" class="no-spin" type="text" value="追跡" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301-name" class="no-spin" type="text" value="登擧" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401-name" class="no-spin" type="text" value="鑑定" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1401-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501-name" class="no-spin" type="text" value="読唇術" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1501-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="skill-uncommon-table"></tbody>
                             </table>
-                        </div>
-                        <div class="title">
-                            <i class="dropdown icon"></i>
-                            行動技能
-                        </div>
-                        <div class="content">
-                            <table class="ui inverted striped selectable unstackable table" cellpadding="10px">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="width: 2.5em">初</th>
-                                        <th style="width: 2.5em">職</th>
-                                        <th style="width: 2.5em">興</th>
-                                        <th style="width: 2.5em">成</th>
-                                        <th style="width: 2.5em">他</th>
-                                        <th style="width: 3em">計</th>
-                                        <th style="width: 0.2em"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601-name" class="no-spin" type="text" value="運転" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1601-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701-name" class="no-spin" type="text" value="機械修理" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1701-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801-name" class="no-spin" type="text" value="重機械操作" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1801-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901-name" class="no-spin" type="text" value="乗馬" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-1901-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001-name" class="no-spin" type="text" value="水泳" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2001-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101-name" class="no-spin" type="text" value="操縦" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2101-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201-name" class="no-spin" type="text" value="ダイビング" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301-name" class="no-spin" type="text" value="跳躍" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301" class="no-spin" type="number" value="20" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401-name" class="no-spin" type="text" value="電気修理" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2401-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501-name" class="no-spin" type="text" value="ナビゲート" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2501-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601-name" class="no-spin" type="text" value="爆破" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2601-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701-name" class="no-spin" type="text" value="催眠術" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2701-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801-name" class="no-spin" type="text" value="変装" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2801-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901-name" class="no-spin" type="text" value="動物使い" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-2901-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="title">
-                            <i class="dropdown icon"></i>
-                            交渉技能
-                        </div>
-                        <div class="content">
-                            <table class="ui inverted striped selectable unstackable table" cellpadding="10px">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="width: 2.5em">初</th>
-                                        <th style="width: 2.5em">職</th>
-                                        <th style="width: 2.5em">興</th>
-                                        <th style="width: 2.5em">成</th>
-                                        <th style="width: 2.5em">他</th>
-                                        <th style="width: 3em">計</th>
-                                        <th style="width: 0.2em"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001-name" class="no-spin" type="text" value="信用" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001" class="no-spin" type="number" value="0" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3001-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101-name" class="no-spin" type="text" value="言いくるめ" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3101-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201-name" class="no-spin" type="text" value="説得" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301-name" class="no-spin" type="text" value="威圧" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301" class="no-spin" type="number" value="15" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401-name" class="no-spin" type="text" value="魅惑" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401" class="no-spin" type="number" value="15" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3401-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501-name" class="no-spin" type="text" value="母国語" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3501-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601-name" class="no-spin" type="text" value="言語" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3601-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="title">
-                            <i class="dropdown icon"></i>
-                            知識技能
-                        </div>
-                        <div class="content">
-                            <table class="ui inverted striped selectable unstackable table" cellpadding="10px">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th style="width: 2.5em">初</th>
-                                        <th style="width: 2.5em">職</th>
-                                        <th style="width: 2.5em">興</th>
-                                        <th style="width: 2.5em">成</th>
-                                        <th style="width: 2.5em">他</th>
-                                        <th style="width: 3em">計</th>
-                                        <th style="width: 0.2em"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701-name" class="no-spin" type="text" value="医学" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3701-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801-name" class="no-spin" type="text" value="オカルト" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3801-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901-name" class="no-spin" type="text" value="クトゥルフ神話" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901" class="no-spin" type="number" value="0" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-3901-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001-name" class="no-spin" type="text" value="芸術/製作" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4001-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101-name" class="no-spin" type="text" value="経理" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4101-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201-name" class="no-spin" type="text" value="考古学" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301-name" class="no-spin" type="text" value="コンピューター" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4301-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401-name" class="no-spin" type="text" value="科学" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4401-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501-name" class="no-spin" type="text" value="心理学" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4501-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601-name" class="no-spin" type="text" value="人類学" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4601-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701-name" class="no-spin" type="text" value="電子工学" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4701-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801-name" class="no-spin" type="text" value="自然" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4801-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901-name" class="no-spin" type="text" value="法律" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-4901-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001-name" class="no-spin" type="text" value="歴史" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001" class="no-spin" type="number" value="5" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5001-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101-name" class="no-spin" type="text" value="伝承" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101" class="no-spin" type="number" value="1" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5101-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201-name" class="no-spin" type="text" value="サバイバル" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201" class="no-spin" type="number" value="10" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201-job" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201-interest" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201-grow" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201-other" class="no-spin" min="0" type="number" /></div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input"><input id="param-5201-present" class="no-spin" type="number" disabled /></div>
-                                        </td>
-                                        <td>
-                                            <button class="ui compact basic secondary icon button" disabled><i class="close icon"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <button id="append-skill-uncommon" class="ui fluid inverted secondary basic button">技能追加</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <footer class="ui fixed inverted menu" style="top: auto; bottom: 0">
+            <div class="ui container">
+                <div class="ui inverted menu">
+                    <div class="ui dropdown item">
+                        <i class="fas fa-dice"></i>
+                        <div class="inverted menu" style="background: #1b1c1d">
+                            <a id="dice-roll-1x100" class="inverted item" style="background-color: #1b1c1d !important; color: whitesmoke !important">1D100</a>
+                            <a id="dice-roll-1x10" class="inverted item" style="background-color: #1b1c1d !important; color: whitesmoke !important">1D10</a>
+                            <a id="dice-roll-1x6" class="inverted item" style="background-color: #1b1c1d !important; color: whitesmoke !important">1D6</a>
+                            <a id="dice-roll-2x6" class="inverted item" style="background-color: #1b1c1d !important; color: whitesmoke !important">2D6</a>
+                            <a id="dice-roll-3x6" class="inverted item" style="background-color: #1b1c1d !important; color: whitesmoke !important">3D6</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui inverted right menu">
+                    <div class="item">
+                        <button id="characteristic-view" class="ui button" style="display: flex">
+                            <i class="eye icon" style="width: 6px"></i>
+                            <div class="ui mobile hidden" style="padding-left: 10px">閲覧</div>
+                        </button>
+                    </div>
+                    <div class="item">
+                        <button id="characteristic-export" class="ui button" style="display: flex">
+                            <i class="share icon" style="width: 3px"></i>
+                            <div class="ui mobile hidden" style="padding-left: 10px">出力</div>
+                        </button>
+                    </div>
+                    <div id="characteristic-save-menu" class="item">
+                        <button id="characteristic-save" class="ui center aligned positive button" style="display: flex">
+                            <i class="save icon" style="width: 3px"></i>
+                            <div class="ui mobile hidden" style="padding-left: 10px">保存</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <div class="ui tiny export modal">
+            <div class="ui top inverted attached segment">
+                <p style="font-size: x-large">出力</p>
+            </div>
+            <div class="ui inverted attached segment">
+                <div class="ui inverted pointing secondary menu">
+                    <a class="item active" data-tab="chatpalette">チャットパレット</a>
+                    <a class="item" data-tab="ccfolia">CCFOLIA</a>
+                </div>
+                <div class="ui bottom attached tab inverted segment active" data-tab="chatpalette">
+                    <textarea id="characteristic-export-chatpalette" class="ui textarea" rows="12" readonly></textarea>
+                    <div class="ui container">
+                        <button id="characteristic-export-commands-copy" class="ui fluid primary button">クリップボードにコピー</button>
+                    </div>
+                </div>
+                <div class="ui bottom attached tab inverted segment" data-tab="ccfolia" style="border-top: 1px solid #555">
+                    <div class="ui inverted grid" style="margin-bottom: 0px">
+                        <div class="ui row">
+                            <div class="ui middle aligned twelve wide column">幸運をステータスに追加する</div>
+                            <div class="ui right aligned four wide column">
+                                <div class="ui fitted toggle checkbox">
+                                    <input id="characteristic-export-commands-copy-ccfolia-luk" type="checkbox" />
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui row">
+                            <div class="ui middle aligned twelve wide column">能力値をパラメータに追加する</div>
+                            <div class="ui right aligned four wide column">
+                                <div class="ui fitted toggle checkbox">
+                                    <input id="characteristic-export-commands-copy-ccfolia-parametor" type="checkbox" />
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui row">
+                            <div class="ui middle aligned twelve wide column">ステータスを非公開にする</div>
+                            <div class="ui right alignedfour wide column">
+                                <div class="ui fitted toggle checkbox">
+                                    <input id="characteristic-export-commands-copy-ccfolia-secret" type="checkbox" />
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui row">
+                            <div class="ui middle aligned twelve wide column">発言時キャラ画像を表示しない</div>
+                            <div class="ui right alignedfour wide column">
+                                <div class="ui fitted toggle checkbox">
+                                    <input id="characteristic-export-commands-copy-ccfolia-invisible" type="checkbox" />
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui row">
+                            <div class="ui middle aligned twelve wide column">盤面キャラ一覧に表示しない</div>
+                            <div class="ui right alignedfour wide column">
+                                <div class="ui fitted toggle checkbox">
+                                    <input id="characteristic-export-commands-copy-ccfolia-hideStatus" type="checkbox" />
+                                    <label></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui container">
+                        <button id="characteristic-export-commands-copy-ccfolia" class="ui fluid primary button">CCFOLIA形式でコピー</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui small account modal">
+            <div class="ui middle aligned center aligned grid">
+                <div class="column">
+                    <form class="ui large form">
+                        <div class="ui inverted stacked segment">
+                            <div class="field">
+                                <div class="ui left icon input">
+                                    <i class="user icon"></i>
+                                    <input type="text" name="username" placeholder="Username" />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui left icon input">
+                                    <i class="lock icon"></i>
+                                    <input type="password" name="password" placeholder="Password" />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui left icon account-sign-up input">
+                                    <i class="lock icon"></i>
+                                    <input type="password" name="password-confirm" placeholder="Password(Confirm)" />
+                                </div>
+                            </div>
+                            <div id="account-sign-in-send" class="ui fluid large primary account-sign-in button">ログイン</div>
+                            <div id="account-sign-up-send" class="ui fluid large positive account-sign-up button">新規登録</div>
+                        </div>
+                    </form>
+                    <div class="ui inverted right aligned account-sign-in message"><a id="account-sign-up-switch" href="#">アカウントを作成</a></div>
+                    <div class="ui inverted right aligned account-sign-up message"><a id="account-sign-in-switch" href="#">代わりにログイン</a></div>
                 </div>
             </div>
         </div>

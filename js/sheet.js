@@ -1,263 +1,960 @@
 window.onload = function () {
-    var data = new Object();
-    data.init = function () {
-        this.str = 0;
-        this.strGrow = 0;
-        this.con = 0;
-        this.conGrow = 0;
-        this.siz = 0;
-        this.sizGrow = 0;
-        this.dex = 0;
-        this.dexGrow = 0;
-        this.app = 0;
-        this.appGrow = 0;
-        this.int = 0;
-        this.intGrow = 0;
-        this.pow = 0;
-        this.powGrow = 0;
-        this.edu = 0;
-        this.eduGrow = 0;
-        this.luk = 0;
-        this.lukGrow = 0;
-        this.ide = 0;
-        this.ideGrow = 0;
-        this.knw = 0;
-        this.knwGrow = 0;
-        this.hp = 0;
-        this.hpGrow = 0;
-        this.mp = 0;
-        this.mpGrow = 0;
+    function initCharacteristic(characteristic) {
+        initProfile(characteristic.profile);
+        initParameter(characteristic.parameter);
 
-        this.san = 0;
+        characteristic.getMaxSkillId = function () {
+            var max = 0;
+            for (var i = 0; i < characteristic.skills.length; i++) {
+                max = Math.max(characteristic.skills[i].id, max);
+            }
+            return max;
+        };
+        characteristic.getMaxWeaponId = function () {
+            var max = 0;
+            for (var i = 0; i < characteristic.weapons.length; i++) {
+                max = Math.max(characteristic.weapons[i].id, max);
+            }
+            return max;
+        };
+        characteristic.getMaxEquipId = function () {
+            var max = 0;
+            for (var i = 0; i < characteristic.equips.length; i++) {
+                max = Math.max(characteristic.equips[i].id, max);
+            }
+            return max;
+        };
 
-        this.jobPointsCalculation = "";
-        this.jobPointsCorrection = 0;
-        this.interestPointsCorrection = 0;
+        $("#param-job-points-calculate")[0].addEventListener("click", function (e) {
+            var jobPointsCalculation = $("#param-job-points-calculation")[0].value;
+            var exp = emptyBy(jobPointsCalculation, "0")
+                .replaceAll("×", "*")
+                .toLowerCase()
+                .replace("edu", characteristic.parameter.edu + characteristic.parameter.eduGrow)
+                .replace("str", characteristic.parameter.str + characteristic.parameter.strGrow)
+                .replace("con", characteristic.parameter.con + characteristic.parameter.conGrow)
+                .replace("pow", characteristic.parameter.pow + characteristic.parameter.powGrow)
+                .replace("dex", characteristic.parameter.dex + characteristic.parameter.dexGrow)
+                .replace("siz", characteristic.parameter.siz + characteristic.parameter.sizGrow)
+                .replace("app", characteristic.parameter.app + characteristic.parameter.appGrow);
+            console.log(exp);
+            $("#param-job-points")[0].value = eval(exp);
+            eval("characteristic.parameter.jobPoints=" + emptyBy($("#param-job-points")[0].value, "0"));
+            viewUpdate();
+        });
+        $("#param-job-points")[0].addEventListener("input", function (e) {
+            eval("characteristic.parameter.jobPoints=" + emptyBy($("#param-job-points")[0].value, "0"));
+            viewUpdate();
+        });
+        $("#param-job-points-correction")[0].addEventListener("input", function (e) {
+            eval("characteristic.parameter.jobPointsCorrection=" + emptyBy($("#param-job-points-correction")[0].value, "0"));
+            viewUpdate();
+        });
+        $("#param-interest-points-correction")[0].addEventListener("input", function (e) {
+            eval("characteristic.parameter.interestPointsCorrection=" + emptyBy($("#param-interest-points-correction")[0].value, "0"));
+            viewUpdate();
+        });
 
-        this.skills = [];
-    };
-    data.getIde = function () {
-        return data.int + data.intGrow;
-    };
-    data.getKnw = function () {
-        return data.edu + data.eduGrow;
-    };
-    data.getBld = function () {
-        var v = this.str + this.siz;
-        if (v < 65) return -2;
-        else if (v < 85) return -1;
-        else if (v < 125) return 0;
-        else if (v < 165) return 1;
-        else if (v < 205) return 2;
-        else if (v < 285) return 3;
-        else if (v < 365) return 4;
-        else if (v < 445) return 5;
-        else if (v < 525) return 6;
-        else {
-            return Math.floor((v - 525) / 80) + 6;
+        $("#append-skill-combat")[0].addEventListener("click", appendSkill);
+        $("#append-skill-survey")[0].addEventListener("click", appendSkill);
+        $("#append-skill-personal")[0].addEventListener("click", appendSkill);
+        $("#append-skill-conduct")[0].addEventListener("click", appendSkill);
+        $("#append-skill-transfer")[0].addEventListener("click", appendSkill);
+        $("#append-skill-knowledge")[0].addEventListener("click", appendSkill);
+        $("#append-skill-uncommon")[0].addEventListener("click", appendSkill);
+
+        $("#append-skill-combat-malee")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-combat-firearms")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-conduct-arts")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-conduct-survival")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-transfer-drive")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-transfer-control")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-knowledge-folklore")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-knowledge-science")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-knowledge-native")[0].addEventListener("click", appendSpecificSkill);
+        $("#append-skill-knowledge-language")[0].addEventListener("click", appendSpecificSkill);
+
+        $("#append-weapon")[0].addEventListener("click", appendWeapon);
+
+        $("#append-equip")[0].addEventListener("click", appendEquip);
+
+        initMoney(characteristic.money);
+        initBackstory(characteristic.backstory);
+
+        $("#memo")[0].value = characteristic.memo;
+        $("#memo")[0].addEventListener("input", function (e) {
+            characteristic.memo = $("#memo")[0].value;
+        });
+    }
+    function initProfile(profile) {
+        $("#profile-name")[0].value = profile.name;
+        $("#profile-kana")[0].value = profile.kana;
+        $("#profile-tag")[0].value = profile.tag;
+        $("#profile-job")[0].value = profile.job;
+        $("#profile-age")[0].value = profile.age;
+        $("#profile-gender")[0].value = profile.gender;
+        $("#profile-height")[0].value = profile.height;
+        $("#profile-weight")[0].value = profile.weight;
+        $("#profile-origin")[0].value = profile.origin;
+        $("#profile-hairColor")[0].value = profile.hairColor;
+        $("#profile-eyeColor")[0].value = profile.eyeColor;
+        $("#profile-skinColor")[0].value = profile.skinColor;
+        $("#profile-image")[0].src = profile.image;
+
+        $("#profile-name")[0].addEventListener("input", updateProfile);
+        $("#profile-kana")[0].addEventListener("input", updateProfile);
+        $("#profile-tag")[0].addEventListener("input", updateProfile);
+        $("#profile-job")[0].addEventListener("input", updateProfile);
+        $("#profile-age")[0].addEventListener("input", updateProfile);
+        $("#profile-gender")[0].addEventListener("input", updateProfile);
+        $("#profile-height")[0].addEventListener("input", updateProfile);
+        $("#profile-weight")[0].addEventListener("input", updateProfile);
+        $("#profile-origin")[0].addEventListener("input", updateProfile);
+        $("#profile-hairColor")[0].addEventListener("input", updateProfile);
+        $("#profile-eyeColor")[0].addEventListener("input", updateProfile);
+        $("#profile-skinColor")[0].addEventListener("input", updateProfile);
+
+        $("#upload-profile-image")[0].addEventListener(
+            "change",
+            function (evt) {
+                var file = evt.target.files;
+                var reader = new FileReader();
+                var imgReader = new Image();
+                var imgHeight = 300;
+                reader.readAsDataURL(file[0]);
+                reader.onload = function () {
+                    imgReader.onload = () => {
+                        const imgType = imgReader.src.substring(5, imgReader.src.indexOf(";"));
+                        const imgWidth = imgReader.width * (imgHeight / imgReader.height);
+                        const canvas = document.createElement("canvas");
+                        canvas.width = imgWidth;
+                        canvas.height = imgHeight;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(imgReader, 0, 0, imgWidth, imgHeight);
+                        characteristic.profile.image = canvas.toDataURL(imgType);
+                        $("#profile-image")[0].src = characteristic.profile.image;
+                    };
+                    imgReader.src = reader.result;
+                };
+            },
+            false
+        );
+    }
+    function updateProfile(e) {
+        var matches = e.path[0].id.match(/profile-(\w+)/);
+        if (matches == null) return;
+        var prop = matches[1];
+        eval("characteristic.profile." + prop + '="' + $("#profile-" + prop)[0].value + '"');
+
+        viewUpdate();
+    }
+
+    function initParameter(parameter) {
+        $("#param-str")[0].value = parameter.str;
+        $("#param-str-grow")[0].value = parameter.strGrow;
+        $("#param-con")[0].value = parameter.con;
+        $("#param-con-grow")[0].value = parameter.conGrow;
+        $("#param-pow")[0].value = parameter.pow;
+        $("#param-pow-grow")[0].value = parameter.powGrow;
+        $("#param-dex")[0].value = parameter.dex;
+        $("#param-dex-grow")[0].value = parameter.dexGrow;
+        $("#param-app")[0].value = parameter.app;
+        $("#param-app-grow")[0].value = parameter.appGrow;
+        $("#param-siz")[0].value = parameter.siz;
+        $("#param-siz-grow")[0].value = parameter.sizGrow;
+        $("#param-int")[0].value = parameter.int;
+        $("#param-int-grow")[0].value = parameter.intGrow;
+        $("#param-edu")[0].value = parameter.edu;
+        $("#param-edu-grow")[0].value = parameter.eduGrow;
+        $("#param-luk")[0].value = parameter.luk;
+        $("#param-luk-grow")[0].value = parameter.lukGrow;
+        $("#param-ide-grow")[0].value = parameter.ideGrow;
+        $("#param-knw-grow")[0].value = parameter.knwGrow;
+        $("#param-hp-grow")[0].value = parameter.hpGrow;
+        $("#param-mp-grow")[0].value = parameter.mpGrow;
+        $("#param-san")[0].value = parameter.san;
+        $("#param-job-points")[0].value = parameter.jobPoints;
+        $("#param-job-points-correction")[0].value = parameter.jobPointsCorrection;
+        $("#param-interest-points-correction")[0].value = parameter.interestPointsCorrection;
+
+        $("#param-str")[0].addEventListener("input", updateParameter);
+        $("#param-str-grow")[0].addEventListener("input", updateParameter);
+        $("#param-con")[0].addEventListener("input", updateParameter);
+        $("#param-con-grow")[0].addEventListener("input", updateParameter);
+        $("#param-pow")[0].addEventListener("input", updateParameter);
+        $("#param-pow-grow")[0].addEventListener("input", updateParameter);
+        $("#param-dex")[0].addEventListener("input", updateParameter);
+        $("#param-dex-grow")[0].addEventListener("input", updateParameter);
+        $("#param-app")[0].addEventListener("input", updateParameter);
+        $("#param-app-grow")[0].addEventListener("input", updateParameter);
+        $("#param-siz")[0].addEventListener("input", updateParameter);
+        $("#param-siz-grow")[0].addEventListener("input", updateParameter);
+        $("#param-int")[0].addEventListener("input", updateParameter);
+        $("#param-int-grow")[0].addEventListener("input", updateParameter);
+        $("#param-edu")[0].addEventListener("input", updateParameter);
+        $("#param-edu-grow")[0].addEventListener("input", updateParameter);
+        $("#param-luk")[0].addEventListener("input", updateParameter);
+        $("#param-luk-grow")[0].addEventListener("input", updateParameter);
+        $("#param-ide")[0].addEventListener("input", updateParameter);
+        $("#param-ide-grow")[0].addEventListener("input", updateParameter);
+        $("#param-knw")[0].addEventListener("input", updateParameter);
+        $("#param-knw-grow")[0].addEventListener("input", updateParameter);
+        $("#param-hp")[0].addEventListener("input", updateParameter);
+        $("#param-hp-grow")[0].addEventListener("input", updateParameter);
+        $("#param-mp")[0].addEventListener("input", updateParameter);
+        $("#param-mp-grow")[0].addEventListener("input", updateParameter);
+        $("#param-san")[0].addEventListener("input", function (e) {
+            characteristic.parameter.san = parseInt($("#param-san")[0].value);
+            viewUpdate();
+        });
+
+        $("#randam-generate-parameter").on("click", function () {
+            var parameter = characteristic.parameter;
+            parameter.str = (dice(6) + dice(6) + dice(6)) * 5;
+            parameter.con = (dice(6) + dice(6) + dice(6)) * 5;
+            parameter.pow = (dice(6) + dice(6) + dice(6)) * 5;
+            parameter.dex = (dice(6) + dice(6) + dice(6)) * 5;
+            parameter.app = (dice(6) + dice(6) + dice(6)) * 5;
+            parameter.siz = (dice(6) + dice(6) + 6) * 5;
+            parameter.int = (dice(6) + dice(6) + 6) * 5;
+            parameter.edu = (dice(6) + dice(6) + 6) * 5;
+            parameter.luk = (dice(6) + dice(6) + dice(6)) * 5;
+            parameter.san = parameter.pow;
+
+            parameter.strGrow = 0;
+            parameter.conGrow = 0;
+            parameter.sizGrow = 0;
+            parameter.dexGrow = 0;
+            parameter.appGrow = 0;
+            parameter.intGrow = 0;
+            parameter.powGrow = 0;
+            parameter.eduGrow = 0;
+            parameter.lukGrow = 0;
+            parameter.ideGrow = 0;
+            parameter.knwGrow = 0;
+            parameter.hpGrow = 0;
+            parameter.mpGrow = 0;
+
+            $("#param-str")[0].value = parameter.str;
+            $("#param-str-grow")[0].value = parameter.strGrow;
+            $("#param-con")[0].value = parameter.con;
+            $("#param-con-grow")[0].value = parameter.conGrow;
+            $("#param-pow")[0].value = parameter.pow;
+            $("#param-pow-grow")[0].value = parameter.powGrow;
+            $("#param-dex")[0].value = parameter.dex;
+            $("#param-dex-grow")[0].value = parameter.dexGrow;
+            $("#param-app")[0].value = parameter.app;
+            $("#param-app-grow")[0].value = parameter.appGrow;
+            $("#param-siz")[0].value = parameter.siz;
+            $("#param-siz-grow")[0].value = parameter.sizGrow;
+            $("#param-int")[0].value = parameter.int;
+            $("#param-int-grow")[0].value = parameter.intGrow;
+            $("#param-edu")[0].value = parameter.edu;
+            $("#param-edu-grow")[0].value = parameter.eduGrow;
+            $("#param-luk")[0].value = parameter.luk;
+            $("#param-luk-grow")[0].value = parameter.lukGrow;
+            $("#param-ide-grow")[0].value = parameter.ideGrow;
+            $("#param-knw-grow")[0].value = parameter.knwGrow;
+            $("#param-hp-grow")[0].value = parameter.hpGrow;
+            $("#param-mp-grow")[0].value = parameter.mpGrow;
+            $("#param-san")[0].value = parameter.san;
+
+            viewUpdate();
+        });
+    }
+    function updateParameter(e) {
+        var prop = e.path[0].id.replace("param-", "").replace("-grow", "");
+        eval("characteristic.parameter." + prop + "=" + emptyBy($("#param-" + prop)[0].value, "0"));
+        eval("characteristic.parameter." + prop + "Grow=" + emptyBy($("#param-" + prop + "-grow")[0].value, "0"));
+        $("#param-" + prop + "-present")[0].value = eval("characteristic.parameter." + prop + "+" + "characteristic.parameter." + prop + "Grow");
+
+        viewUpdate();
+    }
+
+    function initSkill(skill) {
+        skill.getFullname = function () {
+            return this.subname ? `${this.name}(${this.subname})` : this.name;
+        };
+        skill.getNameId = function () {
+            return this.id + "-name";
+        };
+        skill.getSubnameId = function () {
+            return this.id + "-subname";
+        };
+        skill.getInitId = function () {
+            return this.id + "-init";
+        };
+        skill.getJobId = function () {
+            return this.id + "-job";
+        };
+        skill.getInterestId = function () {
+            return this.id + "-interest";
+        };
+        skill.getGrowId = function () {
+            return this.id + "-grow";
+        };
+        skill.getOtherId = function () {
+            return this.id + "-other";
+        };
+        skill.getPresentId = function () {
+            return this.id + "-present";
+        };
+        skill.getDeleteButtonId = function () {
+            return this.id + "-delete";
+        };
+
+        $("#skill-" + skill.category + "-table").append(ToSkillTr(skill));
+        $("#skill-" + skill.getNameId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.getSubnameId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.getInitId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.getJobId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.getInterestId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.getGrowId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.getOtherId())[0].addEventListener("input", updateSkill);
+        $("#skill-" + skill.id + "-delete")[0].addEventListener("click", deleteSkill);
+    }
+    function createSkill(category, name) {
+        var skill = new Object();
+        skill.category = category;
+        skill.id = characteristic.getMaxSkillId() + 1;
+        skill.name = name ? name : "";
+        skill.subname = "";
+        skill.init = 0;
+        skill.job = 0;
+        skill.interest = 0;
+        skill.grow = 0;
+        skill.other = 0;
+        skill.nameEditable = name ? false : true;
+        skill.subnameEditable = name ? true : false;
+        skill.initEditable = true;
+        skill.deletable = true;
+        return skill;
+    }
+    function appendSkill(e) {
+        var matches = e.path[0].id.match(/append-skill-(\w+)/);
+        var skill = createSkill(matches[1]);
+        initSkill(skill);
+        characteristic.skills.push(skill);
+
+        viewUpdate();
+    }
+    function appendSpecificSkill(e) {
+        console.log(e);
+        var matches = e.path[0].id.match(/append-skill-(\w+)/);
+        var skill = createSkill(matches[1], e.path[0].value);
+        initSkill(skill);
+        characteristic.skills.push(skill);
+
+        viewUpdate();
+    }
+    function updateSkill(e) {
+        var matches = e.path[0].id.match(/skill-(\w+)-(\w+)/);
+        if (matches == null) return;
+        var id = parseInt(matches[1]);
+        var prop = matches[2];
+        var skill = characteristic.skills.find((v) => v.id === id);
+        if (e.path[0].type == "text") {
+            eval("skill." + prop + '="' + $("#skill-" + id + "-" + prop)[0].value + '"');
+        } else if (e.path[0].type == "number") {
+            eval("skill." + prop + "=" + emptyBy($("#skill-" + id + "-" + prop)[0].value, "0"));
         }
-    };
-    data.getDb = function () {
-        var v = this.str + this.siz;
-        if (v < 65) return -2;
-        else if (v < 85) return -1;
-        else if (v < 125) return 0;
-        else if (v < 165) return "1D4";
-        else if (v < 205) return "1D6";
-        else if (v < 285) return "2D6";
-        else if (v < 365) return "3D6";
-        else if (v < 445) return "4D6";
-        else if (v < 525) return "5D6";
-        else {
-            var d = Math.floor((v - 525) / 80) + 5;
-            return "" + d + "D6";
+
+        viewUpdate();
+    }
+    function deleteSkill(e) {
+        var matches = (e.path[0].id + e.path[1].id).trim().match(/skill-(\w+)-delete/);
+        if (matches == null) return;
+        var id = parseInt(matches[1]);
+        var index;
+        var found = characteristic.skills.some(function (skill, i) {
+            index = i;
+            return skill.id == id;
+        });
+
+        if (!found) return;
+
+        $("#skill-" + characteristic.skills[index].id + "-row").remove();
+        characteristic.skills.splice(index, 1);
+
+        viewUpdate();
+    }
+    function ToSkillTr(skill) {
+        var nameOptionShown = skill.subnameEditable || skill.subname;
+        var nameEditableDisabledProp = skill.nameEditable ? "" : " disabled";
+        var nameSpan = nameOptionShown ? "" : ' colspan="2"';
+        var nameTd = "<td" + nameSpan + '><div class="ui fluid input"><input id="skill-' + skill.getNameId() + '" class="no-spin" type="text" value="' + skill.name + '"' + nameEditableDisabledProp + " /></div></td>";
+        var nameOptionHidden = nameOptionShown ? "" : ' style="display:none"';
+        var subnameEditableDisabledProp = skill.subnameEditable ? "" : " disabled";
+        var subnameTd = "<td" + nameOptionHidden + '><div class="ui fluid input"><input id="skill-' + skill.getSubnameId() + '" class="no-spin" type="text" value="' + skill.subname + '"' + subnameEditableDisabledProp + " /></div></td>";
+        var initEditableDisabledProp = skill.initEditable ? "" : " disabled";
+        var initTd = '<td><div class="ui fluid input"><input id="skill-' + skill.getInitId() + '" class="no-spin" type="number" value="' + skill.init + '"' + initEditableDisabledProp + " /></div></td>";
+        var jobTd = '<td><div class="ui fluid input"><input id="skill-' + skill.getJobId() + '" class="no-spin" type="number" value="' + (skill.job == 0 ? "" : skill.job) + '" /></div></td>';
+        var interestTd = '<td><div class="ui fluid input"><input id="skill-' + skill.getInterestId() + '" class="no-spin" type="number" value="' + (skill.interest == 0 ? "" : skill.interest) + '" /></div></td>';
+        var growTd = '<td><div class="ui fluid input"><input id="skill-' + skill.getGrowId() + '" class="no-spin" type="number" value="' + (skill.grow == 0 ? "" : skill.grow) + '" /></div></td>';
+        var otherTd = '<td><div class="ui fluid input"><input id="skill-' + skill.getOtherId() + '" class="no-spin" type="number" value="' + (skill.other == 0 ? "" : skill.other) + '" /></div></td>';
+        var presentTd = '<td><div class="ui fluid input"><input id="skill-' + skill.getPresentId() + '" class="no-spin" type="number" disabled /></div></td>';
+        var deleteDisabledProp = skill.deletable ? "" : " disabled";
+        var deleteButtonTd = '<td><button id="skill-' + skill.id + '-delete" class="ui compact basic negative icon button"' + deleteDisabledProp + '><i class="close icon"></i></button></td>';
+        return '<tr id="skill-' + skill.id + '-row">' + nameTd + subnameTd + initTd + jobTd + interestTd + growTd + otherTd + presentTd + deleteButtonTd + "</tr>";
+    }
+
+    function initWeapon(weapon) {
+        weapon.getNameId = function () {
+            return this.id + "-name";
+        };
+        weapon.getRateId = function () {
+            return this.id + "-rate";
+        };
+        weapon.getDamageId = function () {
+            return this.id + "-damage";
+        };
+        weapon.getRangeId = function () {
+            return this.id + "-range";
+        };
+        weapon.getAttacksId = function () {
+            return this.id + "-attacks";
+        };
+        weapon.getElasticId = function () {
+            return this.id + "-elastic";
+        };
+        weapon.getFailureId = function () {
+            return this.id + "-failure";
+        };
+        weapon.getDeleteButtonId = function () {
+            return this.id + "-delete";
+        };
+
+        $("#weapon-table").append(ToWeaponTr(weapon));
+        $("#weapon-" + weapon.getNameId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.getRateId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.getDamageId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.getRangeId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.getAttacksId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.getElasticId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.getFailureId())[0].addEventListener("input", updateWeapon);
+        $("#weapon-" + weapon.id + "-delete")[0].addEventListener("click", deleteWeapon);
+        $("#weapon-" + weapon.id + "-rate-skill-value")[0].addEventListener("change", function (e) {
+            var matches = e.path[0].id.match(/weapon-(\w+)-rate-skill-value/);
+            if (matches == null) return;
+            var id = parseInt(matches[1]);
+
+            matches = e.path[0].value.match(/(\d+)-\d+-(\d+)/);
+            if (matches) characteristic.weapons[id].rate = parseInt(matches[2]);
+            characteristic.weapons[id].rateSkillName = !matches ? "任意" : $("#weapon-" + weapon.id + "-rate-skill").dropdown("get text");
+        });
+    }
+    function appendWeapon(e) {
+        var weapon = new Object();
+        weapon.category = "common";
+        weapon.id = characteristic.getMaxWeaponId() + 1;
+        weapon.name = "";
+        weapon.rate = 0;
+        weapon.damage = "";
+        weapon.range = "";
+        weapon.attacks = "";
+        weapon.elastic = "";
+        weapon.failure = "";
+        weapon.nameEditable = true;
+        weapon.editable = true;
+        initWeapon(weapon);
+        characteristic.weapons.push(weapon);
+
+        viewUpdate();
+    }
+    function updateWeapon(e) {
+        var matches = e.path[0].id.match(/weapon-(\w+)-(\w+)/);
+        if (matches == null) return;
+        var id = parseInt(matches[1]);
+        var prop = matches[2];
+        var weapon = characteristic.weapons.find((v) => v.id === id);
+        if (e.path[0].type == "text") {
+            eval("weapon." + prop + '="' + $("#weapon-" + id + "-" + prop)[0].value + '"');
+        } else if (e.path[0].type == "number") {
+            eval("weapon." + prop + "=" + emptyBy($("#weapon-" + id + "-" + prop)[0].value, "0"));
         }
-    };
-    data.getHp = function () {
-        return Math.floor((this.con + this.siz) / 10);
-    };
-    data.getMp = function () {
-        return Math.floor(this.pow / 5);
-    };
-    data.getMov = function () {
-        if (this.dex < this.siz && this.str < this.siz) return 7;
-        else if (this.dex > this.siz && this.str > this.siz) return 9;
-        else return 8;
-    };
-    data.getJobPoint = function () {
-        var exp = emptyBy(this.jobPointsCalculation, "EDU×4").replaceAll("×", "*").toLowerCase().replace("edu", this.edu).replace("str", this.str).replace("con", this.con).replace("pow", this.pow).replace("dex", this.dex).replace("siz", this.siz).replace("app", this.app);
-        return eval(exp);
-    };
-    data.getInterestPoint = function () {
-        return this.int * 2;
-    };
-    data.getAvd = function () {
-        return Math.floor(this.dex / 2);
-    };
-    data.calc = function () {
-        this.bld = this.getBld();
-        this.db = this.getDb();
-        this.hp = this.getHp();
-        this.mp = this.getMp();
-        this.mov = this.getMov();
-        this.avd = this.getAvd();
-
-        this.san = this.pow;
-    };
-    data.randomStatus = function () {
-        this.str = (dice(6) + dice(6) + dice(6)) * 5;
-        this.con = (dice(6) + dice(6) + dice(6)) * 5;
-        this.pow = (dice(6) + dice(6) + dice(6)) * 5;
-        this.dex = (dice(6) + dice(6) + dice(6)) * 5;
-        this.app = (dice(6) + dice(6) + dice(6)) * 5;
-        this.siz = (dice(6) + dice(6) + 6) * 5;
-        this.int = (dice(6) + dice(6) + 6) * 5;
-        this.edu = (dice(6) + dice(6) + 6) * 5;
-        this.luk = (dice(6) + dice(6) + dice(6)) * 5;
-
-        this.san = this.pow;
-
-        this.strGrow = 0;
-        this.conGrow = 0;
-        this.sizGrow = 0;
-        this.dexGrow = 0;
-        this.appGrow = 0;
-        this.intGrow = 0;
-        this.powGrow = 0;
-        this.eduGrow = 0;
-        this.lukGrow = 0;
-
-        this.ideGrow = 0;
-        this.knwGrow = 0;
-        this.hpGrow = 0;
-        this.mpGrow = 0;
-
-        this.jobPointsCalculation = "EDU×4";
-        this.jobPointsCorrection = 0;
-        this.interestPointsCorrection = 0;
-    };
-
-    function viewUpdate() {
-        $("#param-str-present")[0].value = data.str + data.strGrow;
-        $("#param-con-present")[0].value = data.con + data.conGrow;
-        $("#param-pow-present")[0].value = data.pow + data.powGrow;
-        $("#param-dex-present")[0].value = data.dex + data.dexGrow;
-        $("#param-app-present")[0].value = data.app + data.appGrow;
-        $("#param-siz-present")[0].value = data.siz + data.sizGrow;
-        $("#param-int-present")[0].value = data.int + data.intGrow;
-        $("#param-edu-present")[0].value = data.edu + data.eduGrow;
-        $("#param-luk-present")[0].value = data.luk + data.lukGrow;
-        $("#param-ide")[0].value = data.getIde();
-        $("#param-ide-present")[0].value = data.getIde() + data.ideGrow;
-        $("#param-knw")[0].value = data.getKnw();
-        $("#param-knw-present")[0].value = data.getKnw() + data.knwGrow;
-        $("#param-hp")[0].value = data.getHp();
-        $("#param-hp-present")[0].value = data.getHp() + data.hpGrow;
-        $("#param-mp")[0].value = data.getMp();
-        $("#param-mp-present")[0].value = data.getMp() + data.mpGrow;
-        $("#param-san-indefinite")[0].innerText = parseInt(data.san * 0.8);
-        $("#param-bld")[0].value = data.getBld();
-        $("#param-db")[0].value = data.getDb();
-        $("#param-mov")[0].value = data.getMov();
-        $("#param-job-points")[0].value = data.getJobPoint();
-        $("#param-job-points-present")[0].value = data.getJobPoint() + data.jobPointsCorrection;
-        $("#param-interest-points")[0].value = data.getInterestPoint();
-        $("#param-interest-points-present")[0].value = data.getInterestPoint() + data.interestPointsCorrection;
-    }
-
-    function dice(i) {
-        return Math.floor(Math.random() * i) + 1;
-    }
-    function emptyBy(value, str) {
-        return !value ? str : value;
-    }
-
-    function calculateStatus(e) {
-        var param = e.path[0].id.replace("param-", "").replace("-grow", "");
-        eval("data." + param + "=" + emptyBy($("#param-" + param)[0].value, "0"));
-        eval("data." + param + "Grow=" + emptyBy($("#param-" + param + "-grow")[0].value, "0"));
-        $("#param-" + param + "-present")[0].value = eval("data." + param + "+" + "data." + param + "Grow");
 
         viewUpdate();
     }
+    function deleteWeapon(e) {
+        var matches = (e.path[0].id + e.path[1].id).trim().match(/weapon-(\w+)-delete/);
+        if (matches == null) return;
+        var id = parseInt(matches[1]);
+        var index;
+        var found = characteristic.weapons.some(function (weapon, i) {
+            index = i;
+            return weapon.id == id;
+        });
 
-    $("#param-str")[0].addEventListener("input", calculateStatus);
-    $("#param-str-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-con")[0].addEventListener("input", calculateStatus);
-    $("#param-con-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-pow")[0].addEventListener("input", calculateStatus);
-    $("#param-pow-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-dex")[0].addEventListener("input", calculateStatus);
-    $("#param-dex-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-app")[0].addEventListener("input", calculateStatus);
-    $("#param-app-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-siz")[0].addEventListener("input", calculateStatus);
-    $("#param-siz-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-int")[0].addEventListener("input", calculateStatus);
-    $("#param-int-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-edu")[0].addEventListener("input", calculateStatus);
-    $("#param-edu-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-luk")[0].addEventListener("input", calculateStatus);
-    $("#param-luk-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-ide")[0].addEventListener("input", calculateStatus);
-    $("#param-ide-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-knw")[0].addEventListener("input", calculateStatus);
-    $("#param-knw-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-hp")[0].addEventListener("input", calculateStatus);
-    $("#param-hp-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-mp")[0].addEventListener("input", calculateStatus);
-    $("#param-mp-grow")[0].addEventListener("input", calculateStatus);
-    $("#param-san")[0].addEventListener("input", function (e) {
-        data.san = parseInt($("#param-san")[0].value);
-        viewUpdate();
-    });
-    $("#param-job-points-calculation")[0].addEventListener("change", function (e) {
-        data.jobPointsCalculation = $("#param-job-points-calculation")[0].value;
-        viewUpdate();
-    });
-    $("#param-job-points-correction")[0].addEventListener("input", function (e) {
-        eval("data.jobPointsCorrection=" + emptyBy($("#param-job-points-correction")[0].value, "0"));
-        viewUpdate();
-    });
-    $("#param-interest-points-correction")[0].addEventListener("input", function (e) {
-        eval("data.interestPointsCorrection=" + emptyBy($("#param-interest-points-correction")[0].value, "0"));
-        viewUpdate();
-    });
+        if (!found) return;
 
-    $("#randam-generate-status").on("click", function () {
-        data.randomStatus();
-        $("#param-str")[0].value = data.str;
-        $("#param-str-grow")[0].value = data.strGrow;
-        $("#param-con")[0].value = data.con;
-        $("#param-con-grow")[0].value = data.conGrow;
-        $("#param-pow")[0].value = data.pow;
-        $("#param-pow-grow")[0].value = data.powGrow;
-        $("#param-dex")[0].value = data.dex;
-        $("#param-dex-grow")[0].value = data.dexGrow;
-        $("#param-app")[0].value = data.app;
-        $("#param-app-grow")[0].value = data.appGrow;
-        $("#param-siz")[0].value = data.siz;
-        $("#param-siz-grow")[0].value = data.sizGrow;
-        $("#param-int")[0].value = data.int;
-        $("#param-int-grow")[0].value = data.intGrow;
-        $("#param-edu")[0].value = data.edu;
-        $("#param-edu-grow")[0].value = data.eduGrow;
-        $("#param-luk")[0].value = data.luk;
-        $("#param-luk-grow")[0].value = data.lukGrow;
-        $("#param-ide-grow")[0].value = data.ideGrow;
-        $("#param-knw-grow")[0].value = data.knwGrow;
-        $("#param-hp-grow")[0].value = data.hpGrow;
-        $("#param-mp-grow")[0].value = data.mpGrow;
-        $("#param-san")[0].value = data.san;
-        $("#param-job-points-correction")[0].value = data.jobPointsCorrection;
-        $("#param-interest-points-correction")[0].value = data.interestPointsCorrection;
+        $("#weapon-" + characteristic.weapons[index].id + "-row-1").remove();
+        $("#weapon-" + characteristic.weapons[index].id + "-row-2").remove();
+        characteristic.weapons.splice(index, 1);
 
         viewUpdate();
+    }
+    function ToWeaponTr(weapon) {
+        var nameEditableDisabledProp = weapon.nameEditable ? "" : " disabled";
+        var editableDisabledProp = weapon.editable ? "" : " disabled";
+        var name = '<td rowspan="2"><div class="ui fluid input"><input id="weapon-' + weapon.getNameId() + '" class="no-spin" type="text" value="' + weapon.name + '"' + nameEditableDisabledProp + " /></div></td>";
+        var rate = '<td><div class="ui fluid input"><input id="weapon-' + weapon.getRateId() + '" class="no-spin" type="number" value="' + weapon.rate + '" /></div></td>';
+        var rateSkill = '<td colspan="4"><div id="weapon-' + weapon.id + '-rate-skill" class="ui weapon fluid selection dropdown' + editableDisabledProp + '" style="padding: 11px 5px;"><input id="weapon-' + weapon.id + '-rate-skill-value" type="hidden"/><i class="dropdown icon"></i><div class="default text"></div><div class="menu"></div></div></td>';
+        var deleteButtonTd = '<td rowspan="2"><button id="weapon-' + weapon.id + '-delete" class="ui compact basic negative icon button"' + editableDisabledProp + '><i class="close icon"></i></button></td>';
+
+        var damage = '<td><div class="ui fluid input"><input id="weapon-' + weapon.getDamageId() + '" class="no-spin" type="text" value="' + weapon.damage + '" /></div></td>';
+        var range = '<td><div class="ui fluid input"><input id="weapon-' + weapon.getRangeId() + '" class="ui right aligned" type="text" value="' + weapon.range + '" /></div></td>';
+        var attacks = '<td><div class="ui fluid input"><input id="weapon-' + weapon.getAttacksId() + '" class="ui right aligned" type="text" value="' + weapon.attacks + '" /></div></td>';
+        var elastic = '<td><div class="ui fluid input"><input id="weapon-' + weapon.getElasticId() + '" class="no-spin" type="number" value="' + weapon.elastic + '" /></div></td>';
+        var failure = '<td><div class="ui fluid input"><input id="weapon-' + weapon.getFailureId() + '" class="no-spin" type="number" value="' + weapon.failure + '" /></div></td>';
+
+        var tr1 = '<tr id="weapon-' + weapon.id + '-row-1">' + name + rate + rateSkill + deleteButtonTd + "</tr>";
+        var tr2 = '<tr id="weapon-' + weapon.id + '-row-2">' + damage + range + attacks + elastic + failure + "</tr>";
+
+        return tr1 + tr2;
+    }
+
+    function initEquip(equip) {
+        equip.getNameId = function () {
+            return this.id + "-name";
+        };
+        equip.getPriceId = function () {
+            return this.id + "-price";
+        };
+        equip.getQuantityId = function () {
+            return this.id + "-quantity";
+        };
+        equip.getTotalPriceId = function () {
+            return this.id + "-total-price";
+        };
+        equip.getDescriptionId = function () {
+            return this.id + "-description";
+        };
+        equip.getDeleteButtonId = function () {
+            return this.id + "-delete";
+        };
+
+        $("#equip-table").append(ToEquipTr(equip));
+        $("#equip-" + equip.getNameId())[0].addEventListener("input", updateEquip);
+        $("#equip-" + equip.getPriceId())[0].addEventListener("input", updateEquip);
+        $("#equip-" + equip.getQuantityId())[0].addEventListener("input", updateEquip);
+        $("#equip-" + equip.getDescriptionId())[0].addEventListener("input", updateEquip);
+        $("#equip-" + equip.id + "-delete")[0].addEventListener("click", deleteEquip);
+    }
+    function appendEquip(e) {
+        var equip = new Object();
+        equip.category = "equip";
+        equip.id = characteristic.getMaxEquipId() + 1;
+        equip.name = "";
+        equip.price = 0;
+        equip.quantity = "";
+        equip.description = "";
+        equip.editable = true;
+        initEquip(equip);
+        characteristic.equips.push(equip);
+
+        viewUpdate();
+    }
+    function updateEquip(e) {
+        var matches = e.path[0].id.match(/equip-(\w+)-(\w+)/);
+        if (matches == null) return;
+        var id = parseInt(matches[1]);
+        var prop = matches[2];
+        var equip = characteristic.equips.find((v) => v.id === id);
+        if (e.path[0].type == "text") {
+            eval("equip." + prop + '="' + $("#equip-" + id + "-" + prop)[0].value + '"');
+        } else if (e.path[0].type == "number") {
+            eval("equip." + prop + "=" + emptyBy($("#equip-" + id + "-" + prop)[0].value, "0"));
+        }
+
+        viewUpdate();
+    }
+    function deleteEquip(e) {
+        var matches = (e.path[0].id + e.path[1].id).trim().match(/equip-(\w+)-delete/);
+        if (matches == null) return;
+        var id = parseInt(matches[1]);
+        var index;
+        var found = characteristic.equips.some(function (equip, i) {
+            index = i;
+            return equip.id == id;
+        });
+
+        if (!found) return;
+
+        $("#equip-" + characteristic.equips[index].id + "-row").remove();
+        characteristic.equips.splice(index, 1);
+
+        viewUpdate();
+    }
+    function ToEquipTr(equip) {
+        var disabledProp = equip.editable ? "" : " disabled";
+        var name = '<td><div class="ui fluid input"><input id="equip-' + equip.getNameId() + '" class="no-spin" type="text" value="' + equip.name + '" /></div></td>';
+        var price = '<td><div class="ui fluid input"><input id="equip-' + equip.getPriceId() + '" class="no-spin" type="number" value="' + equip.price + '" /></div></td>';
+        var quantity = '<td><div class="ui fluid input"><input id="equip-' + equip.getQuantityId() + '" class="no-spin" type="number" value="' + equip.quantity + '" /></div></td>';
+        var totalPrice = '<td><div class="ui fluid input"><input id="equip-' + equip.getTotalPriceId() + '" class="no-spin" type="number" value="' + equip.quantity * equip.price + '" disabled /></div></td>';
+        var description = '<td><div class="ui fluid input"><input id="equip-' + equip.getDescriptionId() + '" class="no-spin" type="text" value="' + equip.description + '" /></div></td>';
+        var deleteButtonTd = '<td><button id="equip-' + equip.id + '-delete" class="ui compact basic negative icon button"' + disabledProp + '><i class="close icon"></i></button></td>';
+        return '<tr id="equip-' + equip.id + '-row">' + name + price + quantity + totalPrice + description + deleteButtonTd + "</tr>";
+    }
+
+    function initMoney(money) {
+        $("#money-pocket")[0].value = money.pocket;
+        $("#money-cash")[0].value = money.cash;
+        $("#money-assets")[0].value = money.assets;
+
+        $("#money-pocket")[0].addEventListener("input", updateMoney);
+        $("#money-cash")[0].addEventListener("input", updateMoney);
+        $("#money-assets")[0].addEventListener("input", updateMoney);
+    }
+    function updateMoney(e) {
+        var matches = e.path[0].id.match(/money-(\w+)/);
+        if (matches == null) return;
+        var prop = matches[1];
+        eval("characteristic.money." + prop + '="' + $("#money-" + prop)[0].value + '"');
+
+        viewUpdate();
+    }
+
+    function initBackstory(backstory) {
+        $("#backstory-personalDescription")[0].value = backstory.personalDescription;
+        $("#backstory-ideologyOrBeliefs")[0].value = backstory.ideologyOrBeliefs;
+        $("#backstory-significantPeople")[0].value = backstory.significantPeople;
+        $("#backstory-meaningfulLocations")[0].value = backstory.meaningfulLocations;
+        $("#backstory-treasuredPossessions")[0].value = backstory.treasuredPossessions;
+        $("#backstory-traits")[0].value = backstory.traits;
+        $("#backstory-injuriesAndScars")[0].value = backstory.injuriesAndScars;
+        $("#backstory-phobiasAndManias")[0].value = backstory.phobiasAndManias;
+        $("#backstory-spellsAndArtifacts")[0].value = backstory.spellsAndArtifacts;
+        $("#backstory-encounters")[0].value = backstory.encounters;
+
+        $("#backstory-personalDescription")[0].addEventListener("input", updateBackstory);
+        $("#backstory-ideologyOrBeliefs")[0].addEventListener("input", updateBackstory);
+        $("#backstory-significantPeople")[0].addEventListener("input", updateBackstory);
+        $("#backstory-meaningfulLocations")[0].addEventListener("input", updateBackstory);
+        $("#backstory-treasuredPossessions")[0].addEventListener("input", updateBackstory);
+        $("#backstory-traits")[0].addEventListener("input", updateBackstory);
+        $("#backstory-injuriesAndScars")[0].addEventListener("input", updateBackstory);
+        $("#backstory-phobiasAndManias")[0].addEventListener("input", updateBackstory);
+        $("#backstory-spellsAndArtifacts")[0].addEventListener("input", updateBackstory);
+        $("#backstory-encounters")[0].addEventListener("input", updateBackstory);
+
+        $("#randam-generate-backstory").on("click", function () {
+            getRandomRandomPersonalDescription();
+            getRandomIdeologyOrBeliefs();
+            getRandomSignificantPeople();
+            getRandomMeaningfulLocations();
+            gatRandomTreasuredPossessions();
+            getRandomTraits();
+        });
+        $("#randam-generate-backstory-personalDescription").on("click", function () {
+            getRandomRandomPersonalDescription();
+        });
+        $("#randam-generate-backstory-ideologyOrBeliefs").on("click", function () {
+            getRandomIdeologyOrBeliefs();
+        });
+        $("#randam-generate-backstory-significantPeople").on("click", function () {
+            getRandomSignificantPeople();
+        });
+        $("#randam-generate-backstory-meaningfulLocations").on("click", function () {
+            getRandomMeaningfulLocations();
+        });
+        $("#randam-generate-backstory-treasuredPossessions").on("click", function () {
+            gatRandomTreasuredPossessions();
+        });
+        $("#randam-generate-backstory-traits").on("click", function () {
+            getRandomTraits();
+        });
+    }
+    function updateBackstory(e) {
+        var matches = e.path[0].id.match(/backstory-(\w+)/);
+        if (matches == null) return;
+        var prop = matches[1];
+        var value = $("#backstory-" + prop)[0].value;
+        eval("characteristic.backstory." + prop + "= value;");
+
+        viewUpdate();
+    }
+    function getRandomRandomPersonalDescription() {
+        var personalDescriptions = ["いかつい", "ずんぐり", "学者ふう", "童顔", "がっしりした", "だらしない", "輝かしい", "肉付きがいい", "かわいい", "だるそう", "筋肉質", "日焼けした", "きたならしい", "ばらのよう", "屈強", "不愛想", "きゃしゃ", "ハンサム", "若々しい", "不器用", "さえない", "ぶかっこう", "小肥り", "平凡", "しわくちゃ", "ぼんやりした", "上品", "魅力的", "スマート", "陰気", "青白い", "毛深い", "スリム", "汚い", "線の鋭い", "ひ弱"];
+        characteristic.backstory.personalDescription = personalDescriptions[dice(personalDescriptions.length) - 1];
+        $("#backstory-personalDescription")[0].value = characteristic.backstory.personalDescription;
+    }
+    function getRandomIdeologyOrBeliefs() {
+        var ideologyOrBeliefs = [
+            "あなたには崇拝して祈りをささげる崇高な存在(ビシュヌ、イエス、ハイレ・セラシエ1世など)がある。",
+            "人類は宗教(頑固な無神論者、人道主義者、世谷主義者など)なしでやっていける。",
+            "科学にはすべての答えがある。興味がある特定の分野(進化、低温物理学、宇宙探査など)を選ぶ。",
+            "運命(カルマ、階級制度、迷信など)への信念。",
+            "社会あるいは秘密結社(フリーメイソン、婦人会、匿名の組織など)の一員である。",
+            "社会には根絶すべき悪がある。この悪とは何か？（ドラッグ、暴力、人種差別など)",
+            "オカルト(占星術、スピリチュアリズム、タロットなど）",
+            "政治(保守派、社会主義、リベラルなど)。",
+            "「お金は力であり、得られるものはすべて得るつもだ」(貪欲、野心的、無慈悲など)。",
+            "運動員/活動家(フェミニズム、平等の権利、組合の力など)。",
+        ];
+        characteristic.backstory.ideologyOrBeliefs = ideologyOrBeliefs[dice(ideologyOrBeliefs.length) - 1];
+        $("#backstory-ideologyOrBeliefs")[0].value = characteristic.backstory.ideologyOrBeliefs;
+    }
+    function getRandomSignificantPeople() {
+        var significantPeople = [
+            "親(母親、父親、継母など)。",
+            "祖父母(母方の祖母、父方の祖父など)。",
+            "兄弟姉妹(兄弟、異母または異父兄弟、継姉妹など)。",
+            "子供(息子か娘)。",
+            "パートナー(配偶者、婚約者、恋人など)。",
+            "探索者の最も高い職業技能を教えてくれた人。技能を特定し、誰が教えたのか考える(学校教師、師匠、父親など)。",
+            "幼なじみ(級友、隣人、架空の友人など)。",
+            "有名人。あなたのアイドルか英雄。一度も会ったことがないこともありうる(映画スター、政治家、ミュージシャンなど)。",
+            "ゲームにおける仲間の探索者。誰か1人を選ぶかランダムに決める。",
+            "ゲームにおけるノンプレイヤーキャラクター(NPC)。キーパーが1人選ぶ。",
+        ];
+        var whyPeopleSignificant = [
+            "彼らの世話になっている。彼らはどのようにあなたを助けていたのか?(財政的に、苦しい時期の間あなたを保護した、あなたの最初の仕事を世話したなど)。",
+            "彼らは何かをあなたに教えてくれた。それは何か?(技能、愛すること、人としてあるべきことなど)。",
+            "彼らはあなたに人生の意味を与えてくれた。どのように?(あなたは彼らのようになることを切望している、あなたは彼らと共にいようと努力している、あなたは彼らを幸福にしようとしているなど)。",
+            "あなたは彼らを不当に扱い、和解を求めている。あなたは何をしたのか?(彼らからお金を盗んだ、彼らを警察に通報した、彼らが窮地に陥っている時に助けを断ったなど)。",
+            "経験を共有している。どんな?(厳しい時代を共に生きた、共に成長した、共に従軍したなど)。",
+            "あなたは自分を彼らに認めてもらいたいと思っている。どのように?(良い仕事を得る、良い配偶者を見つける、教育を受けるなど)。",
+            "彼らを偶像化している(彼らの名声、美、仕事など)。",
+            "後悔(あなたは彼らの代わりに死ぬべきであった、あなたが言ったことのせいで仲たがいした、機会があったのに手を伸ばして彼らを助けなかったなど)。",
+            "あなたは、自分が彼らより優れていることを証明したいと思っている。彼らの欠点は何であったか?(怠惰、飲酒癖、愛情の欠如など)。",
+            "彼らはあなたのじゃまをした。「あなたはそれに復讐したいと思っている。あなたは何を彼らのせいにしているのか?(愛する人の死、破産、結婚生活の破たんなど)。",
+        ];
+        characteristic.backstory.significantPeople = significantPeople[dice(significantPeople.length) - 1] + "\n" + whyPeopleSignificant[dice(whyPeopleSignificant.length) - 1];
+        $("#backstory-significantPeople")[0].value = characteristic.backstory.significantPeople;
+    }
+    function getRandomMeaningfulLocations() {
+        var meaningfulLocations = [
+            "あなたの学び舎(学校や大学など)。",
+            "あなたの故郷(農村、地方都市、にぎやかな都市など)。",
+            "あなたの初恋の場所(音楽コンサート、休日過ごした場所、防空壕など)。",
+            "落ち着いた、熟考できる場所(図書館、あなたの地所の散歩道、釣りなど)。",
+            "社交的な場所(紳土クラブ、地元のバー、おじの家)。",
+            "あなたの「イデオロギー/信念」に関連する場所(教区の教会、メッカ、ストーンヘンジなど)。",
+            "重要な人々の墓。誰のものか?(親、子供、恋人など)。",
+            "あなたの実家(田舎の屋敷、賃貸アパート、あなたが育てられた孤児院など)。",
+            "人生であなたが最も幸福であった場所(あなたが最初にキスした公園のベンチ、あなたの大学など)。",
+            "あなたの仕事場(オフィス、図書館 銀行など)",
+        ];
+        characteristic.backstory.meaningfulLocations = meaningfulLocations[dice(meaningfulLocations.length) - 1];
+        $("#backstory-meaningfulLocations")[0].value = characteristic.backstory.meaningfulLocations;
+    }
+    function gatRandomTreasuredPossessions() {
+        var treasuredPossessions = [
+            "あなたの最も高い技能に関連したアイテム(高価なスーツ、にせの身分証明、ブラスナックルなど)。",
+            "あなたの職業にとって不可欠なアイテム(往診かばん、車、鍵開け道具など)。",
+            "あなたの幼年期の思い出の品(コミック、折り畳みナイフ、幸運のコインなど)。",
+            "去って行った人物の形見(宝石、あなたの財布に忍ばせた写真、手紙など)。",
+            "あなたの重要な人々にあげた何か(指輪、日誌、地図など)。",
+            "あなたのコレクション。それは何か?(バスの乗車券、ぬいぐるみ、レコードなど)。",
+            "あなたが見つけた何か。ただし、あなたはそれが何で",
+            "スポーツ用具(クリケット用バット、サイン入りの野球ボール、釣竿など)。",
+            "武器(古い拳銃、あなたの古い猟銃、あなたのブーツに隠したナイフなど)。",
+            "ペット(犬、猫、亀)。",
+        ];
+        characteristic.backstory.treasuredPossessions = treasuredPossessions[dice(treasuredPossessions.length) - 1];
+        $("#backstory-treasuredPossessions")[0].value = characteristic.backstory.treasuredPossessions;
+    }
+    function getRandomTraits() {
+        var traits = [
+            "関大(チップをはずむ、困っている人をいつも助い",
+            "動物に懐かれやすい(猫好き、農場育ち、馬に性 慈善家など)。",
+            "夢見る人(想像が飛躍しがち、空想家、非常に創造的など）。",
+            "快楽主義者(パーティーが生きがい、陽気に酔う行き急ぐなど)。",
+            "ギャンプラーおよび冒険家(ポーカーフェイス、何でも一度試してみる、危険と隣り合わせの人生など)。",
+            "料理が上手(素晴らしいケーキを焼く、ほとんど何もないところから食事を作る、舌が肥えているなど)。",
+            "色男/男たらし(人当たりが良い、魅力的な声、魅惑的な目など)。",
+            "忠誠心が強い(友人を助ける、決して約束を違えない。信念のために死んでもよいなど)。",
+            "良い評判(その地方で最高のテーブルスピーチの最も敬度な人間、危険に際しても恐れを知らないなど)。",
+            "野心的(目的を達成したい、ボスになりたい、すべてを手に入れたいなど)。",
+        ];
+        characteristic.backstory.traits = traits[dice(traits.length) - 1];
+        $("#backstory-traits")[0].value = characteristic.backstory.traits;
+    }
+    function viewUpdate(prepearing) {
+        prepearing = !prepearing ? false : prepearing;
+        $("#param-str-present")[0].value = characteristic.parameter.str + characteristic.parameter.strGrow;
+        $("#param-con-present")[0].value = characteristic.parameter.con + characteristic.parameter.conGrow;
+        $("#param-pow-present")[0].value = characteristic.parameter.pow + characteristic.parameter.powGrow;
+        $("#param-dex-present")[0].value = characteristic.parameter.dex + characteristic.parameter.dexGrow;
+        $("#param-app-present")[0].value = characteristic.parameter.app + characteristic.parameter.appGrow;
+        $("#param-siz-present")[0].value = characteristic.parameter.siz + characteristic.parameter.sizGrow;
+        $("#param-int-present")[0].value = characteristic.parameter.int + characteristic.parameter.intGrow;
+        $("#param-edu-present")[0].value = characteristic.parameter.edu + characteristic.parameter.eduGrow;
+        $("#param-luk-present")[0].value = characteristic.parameter.luk + characteristic.parameter.lukGrow;
+        $("#param-ide")[0].value = characteristic.parameter.getIde();
+        $("#param-ide-present")[0].value = characteristic.parameter.getIde() + characteristic.parameter.ideGrow;
+        $("#param-knw")[0].value = characteristic.parameter.getKnw();
+        $("#param-knw-present")[0].value = characteristic.parameter.getKnw() + characteristic.parameter.knwGrow;
+        $("#param-hp")[0].value = characteristic.parameter.getHp();
+        $("#param-hp-present")[0].value = characteristic.parameter.getHp() + characteristic.parameter.hpGrow;
+        $("#param-mp")[0].value = characteristic.parameter.getMp();
+        $("#param-mp-present")[0].value = characteristic.parameter.getMp() + characteristic.parameter.mpGrow;
+        $("#param-san-indefinite")[0].innerText = parseInt(characteristic.parameter.san * 0.8);
+        $("#param-bld")[0].value = characteristic.parameter.getBld();
+        $("#param-db")[0].value = characteristic.parameter.getDb();
+        $("#param-mov")[0].value = characteristic.parameter.getMov();
+
+        var jobPoints = characteristic.parameter.jobPoints + characteristic.parameter.jobPointsCorrection;
+        $("#param-job-points-present")[0].value = characteristic.parameter.jobPoints;
+
+        var interestPoints = characteristic.parameter.getInterestPoint() + characteristic.parameter.interestPointsCorrection;
+        $("#param-interest-points")[0].value = characteristic.parameter.getInterestPoint();
+        $("#param-interest-points-present")[0].value = interestPoints;
+
+        if (!prepearing) {
+            characteristic.skills[0].init = Math.floor((characteristic.parameter.dex + characteristic.parameter.dexGrow) / 2);
+            $("#skill-0-init")[0].value = characteristic.skills[0].init;
+
+            characteristic.skills[44].init = characteristic.parameter.edu + characteristic.parameter.eduGrow;
+            $("#skill-44-init")[0].value = characteristic.skills[44].init;
+
+            var usageJobPoints = 0;
+            var usageInterestPoints = 0;
+            var weaponSkills = [];
+            for (var i = 0; i < characteristic.skills.length; i++) {
+                var skill = characteristic.skills[i];
+                $("#skill-" + skill.getPresentId())[0].value = skill.init + skill.job + skill.interest + skill.grow + skill.other;
+
+                usageJobPoints += skill.job;
+                usageInterestPoints += skill.interest;
+
+                if (skill.name == "近接戦闘" || skill.name == "射撃" || skill.name == "投擲") {
+                    weaponSkills.push({ name: skill.getFullname(), id: skill.id, value: skill.init + skill.job + skill.interest + skill.grow + skill.other });
+                }
+            }
+
+            for (var i = 0; i < characteristic.weapons.length; i++) {
+                var weapon = characteristic.weapons[i];
+                var skillName = weapon.rateSkillName ? weapon.rateSkillName : "任意";
+                var weaponValues = [];
+                var prop = { name: "任意", value: i + "-any", selected: skillName == "任意" };
+                weaponValues.push(prop);
+                $("#weapon-" + weapon.id + "-rate").prop("disabled", !prop.selected);
+                for (var j = 0; j < weaponSkills.length; j++) {
+                    var weaponSkill = weaponSkills[j];
+                    prop = { name: weaponSkill.name, value: i + "-" + j + "-" + weaponSkill.value, selected: weaponSkill.name == skillName };
+                    weaponValues.push(prop);
+                    if (prop.selected) {
+                        $("#weapon-" + weapon.id + "-rate")[0].value = weaponSkill.value;
+                    }
+                }
+                $("#weapon-" + weapon.id + "-rate-skill")
+                    .dropdown({ values: weaponValues })
+                    .dropdown({
+                        onChange: function (value, text, $selectedItem) {
+                            viewUpdate();
+                        },
+                    });
+            }
+
+            for (var i = 0; i < characteristic.equips.length; i++) {
+                var equip = characteristic.equips[i];
+                $("#equip-" + equip.getTotalPriceId())[0].value = equip.price * equip.quantity;
+            }
+
+            var cthulhuSkill = characteristic.skills[37];
+            var cthulhuSkillPoint = cthulhuSkill.init + cthulhuSkill.job + cthulhuSkill.interest + cthulhuSkill.grow + cthulhuSkill.other;
+            $("#param-san-limit")[0].innerText = `/${99 - cthulhuSkillPoint}`;
+
+            var usageJobPointsElement = $("#param-job-points-usage");
+            var usageInterestPointsElement = $("#param-interest-points-usage");
+            if (usageJobPoints <= jobPoints) {
+                usageJobPointsElement.addClass("blue");
+                usageJobPointsElement.removeClass("red");
+            } else {
+                usageJobPointsElement.removeClass("blue");
+                usageJobPointsElement.addClass("red");
+            }
+            if (usageInterestPoints <= interestPoints) {
+                usageInterestPointsElement.addClass("blue");
+                usageInterestPointsElement.removeClass("red");
+            } else {
+                usageInterestPointsElement.removeClass("blue");
+                usageInterestPointsElement.addClass("red");
+            }
+            usageJobPointsElement[0].innerText = "職業P " + usageJobPoints + "/" + jobPoints;
+            usageInterestPointsElement[0].innerText = "興味P " + usageInterestPoints + "/" + interestPoints;
+        }
+    }
+
+    initSigns();
+    initAccount(account);
+    initCharacteristic(characteristic);
+
+    $("#account-recommendation-close")[0].addEventListener("click", function (e) {
+        $("#account-recommendation").hide();
+    });
+
+    $("#characteristic-view")[0].addEventListener("click", function (e) {
+        window.location.href = "view.html?v=" + characteristic.id;
+    });
+
+    $("#characteristic-export")[0].addEventListener("click", function (e) {
+        $("#characteristic-export-chatpalette")[0].value = exportChatpalete(characteristic, false);
+        $(".ui.tiny.export.modal").modal({ duration: 200 }).modal("show");
+    });
+    $("#characteristic-export-commands-copy")[0].addEventListener("click", function (e) {
+        writeClipboard($("#characteristic-export-chatpalette")[0].value);
+    });
+
+    $("#characteristic-export-commands-copy-ccfolia")[0].addEventListener("click", function (e) {
+        var ccfoliaCharacteristic = getCcfoliaClipboardCharacteristic(characteristic);
+        writeClipboard(JSON.stringify(ccfoliaCharacteristic));
+    });
+
+    $("#characteristic-save")[0].addEventListener("click", function (e) {
+        if (account && account.id != 0) {
+            characteristic = saveEditingCharacteristic(account, characteristic);
+            setParam("v", characteristic.id);
+        }
+    });
+    $("#dice-roll-1x100")[0].addEventListener("click", function (e) {
+        diceRoll(1, 100);
+    });
+    $("#dice-roll-1x10")[0].addEventListener("click", function (e) {
+        diceRoll(1, 10);
+    });
+    $("#dice-roll-1x6")[0].addEventListener("click", function (e) {
+        diceRoll(1, 6);
+    });
+    $("#dice-roll-2x6")[0].addEventListener("click", function (e) {
+        diceRoll(2, 6);
+    });
+    $("#dice-roll-3x6")[0].addEventListener("click", function (e) {
+        diceRoll(3, 6);
     });
 
     $(".ui.dropdown").dropdown();
-    $(".ui.accordion").accordion();
+    $(".ui.accordion").accordion({ exclusive: false });
+    $(".ui.pointing.menu .item").tab();
+    $(".ui.rating").rating();
 
-    data.init();
-    viewUpdate();
+    viewUpdate(true);
+
+    setTimeout(function () {
+        for (var i = 0; i < characteristic.skills.length; i++) {
+            characteristic.skills[i].id = i;
+            initSkill(characteristic.skills[i]);
+        }
+
+        for (var i = 0; i < characteristic.weapons.length; i++) {
+            characteristic.weapons[i].id = i;
+            initWeapon(characteristic.weapons[i]);
+        }
+
+        for (var i = 0; i < characteristic.equips.length; i++) {
+            characteristic.equips[i].id = i;
+            initEquip(characteristic.equips[i]);
+        }
+        viewUpdate();
+    }, 10);
 };
+
+account = getLoginAccount();
+var paramV = parseInt(getParam("v"));
+if (!paramV) {
+    characteristic = getEmptyCharacteristic(account);
+    setParam("v", characteristic.id);
+} else {
+    characteristic = getEditingCharacteristic(account, parseInt(getParam("v")));
+}
